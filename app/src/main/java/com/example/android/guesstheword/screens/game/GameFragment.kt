@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
@@ -51,36 +52,21 @@ class GameFragment : Fragment() {
 
         binding.correctButton.setOnClickListener {
             gameviewModel.onCorrect()
-            updateScoreText()
-            updateWordText()
         }
         binding.skipButton.setOnClickListener {
             gameviewModel.onSkip()
-            updateScoreText()
-            updateWordText()
         }
-        updateScoreText()
-        updateWordText()
+
+        gameviewModel.score.observe(viewLifecycleOwner, Observer { newValue -> binding.scoreText.text = newValue.toString() })
+
+        gameviewModel.word.observe(viewLifecycleOwner, Observer { newValue -> binding.wordText.text = newValue.toString() })
+
         return binding.root
-
     }
 
-    /**
-     * Called when the game is finished
-     */
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore(gameviewModel.score)
+        val currentScore = gameviewModel.score.value ?: 0
+        val action = GameFragmentDirections.actionGameToScore(currentScore)
         findNavController(this).navigate(action)
-    }
-
-    /** Methods for updating the UI **/
-
-    private fun updateWordText() {
-        binding.wordText.text = gameviewModel.word
-
-    }
-
-    private fun updateScoreText() {
-        binding.scoreText.text = gameviewModel.score.toString()
     }
 }
