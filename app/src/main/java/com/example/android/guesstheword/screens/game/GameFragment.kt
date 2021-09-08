@@ -61,6 +61,13 @@ class GameFragment : Fragment() {
 
         gameviewModel.word.observe(viewLifecycleOwner, Observer { newValue -> binding.wordText.text = newValue.toString() })
 
+        gameviewModel.eventGameFinished.observe(viewLifecycleOwner, Observer { hasGameFinished ->
+            if(hasGameFinished) {
+                gameFinished()
+                gameviewModel.onGameFinishComplete()
+            }
+        })
+
         return binding.root
     }
 
