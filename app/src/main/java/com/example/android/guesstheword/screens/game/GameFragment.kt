@@ -51,12 +51,7 @@ class GameFragment : Fragment() {
                 false
         )
 
-        binding.correctButton.setOnClickListener {
-            gameviewModel.onCorrect()
-        }
-        binding.skipButton.setOnClickListener {
-            gameviewModel.onSkip()
-        }
+        binding.gameViewModel = gameviewModel
 
         gameviewModel.score.observe(viewLifecycleOwner, Observer { newValue -> binding.scoreText.text = newValue.toString() })
 
